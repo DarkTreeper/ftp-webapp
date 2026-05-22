@@ -1,0 +1,3 @@
+Diese Datei simuliert eine Datei auf dem FTP-Server.
+
+Du kannst sie in der Webapp nach links in den lokalen Bereich uebertragen.

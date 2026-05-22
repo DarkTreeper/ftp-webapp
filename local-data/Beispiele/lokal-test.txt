@@ -1,0 +1,3 @@
+Diese Datei liegt im lokalen Testbereich.
+
+Du kannst sie in der Webapp nach rechts in den Demo-FTP-Bereich uebertragen.

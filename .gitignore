@@ -1,0 +1,34 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+# Ignored default folder with query files
+/queries/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+.pdf
+
+.env
+
+.env.*
+
+!.env.example
+
+!.env.production.example
+
+target/
+
+.idea/
+
+.DS_Store
+
+__MACOSX/
+
+local-data/*
+
+!local-data/.gitkeep
+
+demo-remote-data/
+/.env.production.example

@@ -1,0 +1,49 @@
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: framework
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+  servlet:
+    session:
+      timeout: ${SESSION_TIMEOUT:30m}
+      cookie:
+        http-only: true
+        same-site: strict
+        secure: ${SESSION_COOKIE_SECURE:true}
+
+spring:
+  application:
+    name: secure-filebridge
+  servlet:
+    multipart:
+      max-file-size: ${MAX_UPLOAD_SIZE:1024MB}
+      max-request-size: ${MAX_UPLOAD_SIZE:1024MB}
+  thymeleaf:
+    cache: true
+
+logging:
+  level:
+    dev.filebridge: INFO
+
+filebridge:
+  local-root: ${FILEBRIDGE_LOCAL_ROOT:/data/local}
+  demo-remote-root: ${FILEBRIDGE_DEMO_REMOTE_ROOT:demo-remote-data}
+  remote-root: ${FILEBRIDGE_REMOTE_ROOT:/}
+  demo-mode: ${FILEBRIDGE_DEMO_MODE:false}
+  max-upload-bytes: ${FILEBRIDGE_MAX_UPLOAD_BYTES:1073741824}
+  ftp:
+    host: ${FTP_HOST:172.16.120.33}
+    port: ${FTP_PORT:21}
+    username: ${FTP_USERNAME:}
+    password: ${FTP_PASSWORD:}
+    ftps: ${FTP_FTPS:false}
+    passive-mode: ${FTP_PASSIVE_MODE:true}
+    connect-timeout-millis: ${FTP_CONNECT_TIMEOUT_MILLIS:10000}
+    data-timeout-millis: ${FTP_DATA_TIMEOUT_MILLIS:30000}
+  security:
+    username: ${APP_USERNAME:}
+    password: ${APP_PASSWORD:}
+    password-hash: ${APP_PASSWORD_HASH:}
+

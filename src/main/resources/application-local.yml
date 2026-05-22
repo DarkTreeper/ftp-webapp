@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+spring:
+  thymeleaf:
+    cache: false
+
+filebridge:
+  demo-mode: true
+  local-root: local-data
+  demo-remote-root: demo-remote-data
+  remote-root: /
+  security:
+    username: admin
+    password: Change_ME

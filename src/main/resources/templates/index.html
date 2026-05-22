@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Secure FileBridge</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Secure FileBridge</p>
+        <h1>Dateien in den gemeinsamen Speicher uebertragen</h1>
+    </div>
+    <form th:action="@{/logout}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button class="secondary" type="submit">Abmelden</button>
+    </form>
+</header>
+
+<main class="workspace">
+    <div class="alert error" th:if="${fatalError}" th:text="${fatalError}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <div class="alert success" th:if="${message}" th:text="${message}"></div>
+
+    <section class="panes" th:if="${remote != null}">
+        <article class="pane upload-pane" aria-labelledby="upload-title">
+            <div class="pane-head">
+                <div>
+                    <h2 id="upload-title">Lokale Datei auswaehlen</h2>
+                    <p class="muted">Die Datei wird direkt aus dem Browser an den gemeinsamen Speicher uebertragen.</p>
+                </div>
+            </div>
+
+            <div class="pane-body stack roomy">
+                <div class="info-box">
+                    <h3>Zielordner</h3>
+                    <p class="path" th:text="${remote.path}"></p>
+                </div>
+
+                <form th:action="@{/transfer/upload}" method="post" enctype="multipart/form-data" class="stack">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <input type="hidden" name="remotePath" th:value="${remote.path}">
+                    <label>
+                        Datei vom eigenen Rechner
+                        <input type="file" name="file" required>
+                    </label>
+                    <button type="submit" class="primary">In den gemeinsamen Speicher hochladen</button>
+                </form>
+
+                <div class="hint-list">
+                    <p>Der Browser kann den Rechner nicht frei durchsuchen wie Desktop-FileZilla.</p>
+                    <p>Fuer jede Uebertragung waehlst du die Datei hier gezielt aus.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="pane" aria-labelledby="remote-title">
+            <div class="pane-head">
+                <div>
+                    <h2 id="remote-title">Gemeinsamer Speicher</h2>
+                    <p class="path"><span th:text="${remote.path}"></span></p>
+                </div>
+                <a class="text-link" th:if="${remote.parentPath != null}" th:href="@{/(remotePath=${remote.parentPath})}">Eine Ebene hoch</a>
+            </div>
+
+            <div class="pane-body remote-summary">
+                <div class="info-box compact">
+                    <h3>Backend-Ziel</h3>
+                    <p class="muted">Verbindung erfolgt serverseitig ueber den konfigurierten FTP-Zugang.</p>
+                    <p class="path" th:text="${remoteRoot}"></p>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Groesse</th>
+                        <th>Geaendert</th>
+                        <th>Aktion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${remote.entries.isEmpty()}">
+                        <td colspan="4" class="empty">Keine Dateien auf dieser Ebene.</td>
+                    </tr>
+                    <tr th:each="entry : ${remote.entries}">
+                        <td>
+                            <a th:if="${entry.directory}" th:href="@{/(remotePath=${entry.path})}" th:text="'[Ordner] ' + ${entry.name}"></a>
+                            <span th:unless="${entry.directory}" th:text="${entry.name}"></span>
+                        </td>
+                        <td th:text="${entry.directory ? '-' : entry.size + ' B'}"></td>
+                        <td th:text="${entry.modified != null ? #temporals.format(entry.modified, 'dd.MM.yyyy HH:mm') : '-'}"></td>
+                        <td class="actions">
+                            <a th:if="${!entry.directory}" class="primary button-link" th:href="@{/transfer/download(remoteFile=${entry.path})}">Herunterladen</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+</main>
+</body>
+</html>
