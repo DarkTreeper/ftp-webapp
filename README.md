@@ -55,7 +55,7 @@ In IntelliJ:
 
    ```text
    Benutzer: admin
-   Passwort: admin12345
+   Passwort: Change_ME
    ```
 
 Alternativ im Terminal:

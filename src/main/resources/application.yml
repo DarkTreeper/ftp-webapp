@@ -47,3 +47,8 @@ filebridge:
     password: ${APP_PASSWORD:}
     password-hash: ${APP_PASSWORD_HASH:}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include=health:

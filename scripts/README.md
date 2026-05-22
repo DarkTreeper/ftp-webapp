@@ -15,7 +15,7 @@ chmod +x .git/hooks/pre-commit
 - ❌ `.env` Dateien (Credentials)
 - ❌ Hardcodierte Passwords in Java
 - ❌ Leak-Verdächtige Strings
-- ❌ Build-Artefakte (`target/`, `.class`)
+- ❌ Build-Artefakte (`target/`,`.class`)
 - ⚠️ Lokale Testdaten
 - ⚠️ IDE-Konfigurationsdateien
 
@@ -64,7 +64,7 @@ SPRING_PROFILES_ACTIVE=local mvn spring-boot:run
 ```
 
 Browser: `http://localhost:8080`  
-Login: `admin` / `admin12345`
+Login: `admin` / `Change_ME`
 
 ---
 

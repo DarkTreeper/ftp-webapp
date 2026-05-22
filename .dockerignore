@@ -1,7 +1,13 @@
-target
 .git
+
 .idea
-.vscode
-.DS_Store
+
+target
+
 .env
-local-data
+
+.env.*
+
+__MACOSX
+
+.DS_Store

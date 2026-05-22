@@ -31,4 +31,3 @@ local-data/*
 !local-data/.gitkeep
 
 demo-remote-data/
-/.env.production.example

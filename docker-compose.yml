@@ -2,22 +2,28 @@ services:
   secure-filebridge:
     build: .
     container_name: secure-filebridge
+
     restart: unless-stopped
+
     env_file:
       - .env
-    environment:
-      SERVER_PORT: "8080"
-      FILEBRIDGE_DEMO_MODE: "false"
-      FTP_HOST: 172.16.120.30
-      FTP_PORT: "21"
-      FTP_PASSIVE_MODE: "true"
-      SESSION_COOKIE_SECURE: "true"
+
     ports:
       - "127.0.0.1:8080:8080"
+
     read_only: true
+
     tmpfs:
       - /tmp:noexec,nosuid,nodev
+
     security_opt:
       - no-new-privileges:true
+
     cap_drop:
       - ALL
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

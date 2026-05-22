@@ -2,8 +2,10 @@ package dev.filebridge.controller;
 
 import dev.filebridge.model.DirectoryListing;
 import dev.filebridge.service.FtpFileService;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ContentDisposition;
@@ -30,6 +32,15 @@ public class FileBrowserController {
 
     public FileBrowserController(FtpFileService ftpFileService) {
         this.ftpFileService = ftpFileService;
+    }
+
+
+    @GetMapping("/health")
+
+    public ResponseEntity<String> health() {
+
+        return ResponseEntity.ok("OK");
+
     }
 
     @GetMapping("/")
