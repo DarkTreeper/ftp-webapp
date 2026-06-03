@@ -14,6 +14,16 @@ filebridge:
   local-root: local-data
   demo-remote-root: demo-remote-data
   remote-root: /
-  security:
-    username: admin
-    password: Change_ME
+  users:
+    - username: admin
+      password: Change_ME
+      role: ADMIN
+      root-path: /
+    - username: intern
+      password: Change_ME
+      role: VIEWER
+      root-path: /Intern
+    - username: extern
+      password: Change_ME
+      role: EDITOR
+      root-path: /Extern

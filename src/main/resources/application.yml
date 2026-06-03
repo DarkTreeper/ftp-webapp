@@ -33,8 +33,24 @@ filebridge:
   remote-root: ${FILEBRIDGE_REMOTE_ROOT:/}
   demo-mode: ${FILEBRIDGE_DEMO_MODE:false}
   max-upload-bytes: ${FILEBRIDGE_MAX_UPLOAD_BYTES:1073741824}
+  users:
+    - username: admin
+      password: ${APP_ADMIN_PASSWORD:}
+      password-hash: ${APP_ADMIN_PASSWORD_HASH:}
+      role: ADMIN
+      root-path: /
+    - username: intern
+      password: ${APP_INTERN_PASSWORD:}
+      password-hash: ${APP_INTERN_PASSWORD_HASH:}
+      role: VIEWER
+      root-path: /Intern
+    - username: extern
+      password: ${APP_EXTERN_PASSWORD:}
+      password-hash: ${APP_EXTERN_PASSWORD_HASH:}
+      role: EDITOR
+      root-path: /Extern
   ftp:
-    host: ${FTP_HOST:172.16.120.33}
+    host: ${FTP_HOST:172.16.120.30}
     port: ${FTP_PORT:21}
     username: ${FTP_USERNAME:}
     password: ${FTP_PASSWORD:}
@@ -42,13 +58,3 @@ filebridge:
     passive-mode: ${FTP_PASSIVE_MODE:true}
     connect-timeout-millis: ${FTP_CONNECT_TIMEOUT_MILLIS:10000}
     data-timeout-millis: ${FTP_DATA_TIMEOUT_MILLIS:30000}
-  security:
-    username: ${APP_USERNAME:}
-    password: ${APP_PASSWORD:}
-    password-hash: ${APP_PASSWORD_HASH:}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include=health:

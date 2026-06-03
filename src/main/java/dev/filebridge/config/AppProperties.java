@@ -1,6 +1,8 @@
 package dev.filebridge.config;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -13,6 +15,7 @@ public class AppProperties {
     private long maxUploadBytes = 1_073_741_824L;
     private final Ftp ftp = new Ftp();
     private final Security security = new Security();
+    private List<AppUser> users = new ArrayList<>();
 
     public Path getLocalRoot() {
         return localRoot;
@@ -60,6 +63,14 @@ public class AppProperties {
 
     public Security getSecurity() {
         return security;
+    }
+
+    public List<AppUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<AppUser> users) {
+        this.users = users;
     }
 
     public static class Ftp {
@@ -164,6 +175,54 @@ public class AppProperties {
 
         public void setPasswordHash(String passwordHash) {
             this.passwordHash = passwordHash;
+        }
+    }
+
+    public static class AppUser {
+        private String username;
+        private String password;
+        private String passwordHash;
+        private String role;
+        private String rootPath = "/";
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getPasswordHash() {
+            return passwordHash;
+        }
+
+        public void setPasswordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+        public String getRootPath() {
+            return rootPath;
+        }
+
+        public void setRootPath(String rootPath) {
+            this.rootPath = rootPath;
         }
     }
 }

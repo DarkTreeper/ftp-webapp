@@ -1,6 +1,9 @@
 package dev.filebridge.config;
 
+import dev.filebridge.security.FileRole;
+import dev.filebridge.service.RemotePathPolicy;
 import java.util.List;
+import org.springframework.security.access.AccessDeniedException;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -27,20 +30,27 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(AppProperties properties, PasswordEncoder passwordEncoder) {
-        String username = required(properties.getSecurity().getUsername(), "APP_USERNAME");
-        String configuredHash = trimToNull(properties.getSecurity().getPasswordHash());
-        String configuredPassword = trimToNull(properties.getSecurity().getPassword());
-
-        if (configuredHash == null && configuredPassword == null) {
-            throw new IllegalStateException("Set APP_PASSWORD_HASH or APP_PASSWORD before starting the application.");
+        if (!properties.getUsers().isEmpty()) {
+            List<org.springframework.security.core.userdetails.UserDetails> users = properties.getUsers().stream()
+                    .map(appUser -> User.withUsername(required(appUser.getUsername(), "filebridge.users[].username"))
+                            .password(resolvePassword(appUser.getPasswordHash(), appUser.getPassword(), passwordEncoder))
+                            .roles(validatedRole(appUser.getRole()).name())
+                            .build())
+                    .toList();
+            return new InMemoryUserDetailsManager(users);
         }
 
-        String encodedPassword = configuredHash != null ? validateBcrypt(configuredHash) : passwordEncoder.encode(configuredPassword);
+        String username = required(properties.getSecurity().getUsername(), "APP_USERNAME");
+        String encodedPassword = resolvePassword(
+                properties.getSecurity().getPasswordHash(),
+                properties.getSecurity().getPassword(),
+                passwordEncoder
+        );
 
         return new InMemoryUserDetailsManager(
                 User.withUsername(username)
                         .password(encodedPassword)
-                        .roles("USER")
+                        .roles(FileRole.ADMIN.name())
                         .build()
         );
     }
@@ -58,7 +68,8 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/login"))
+                        .clearAuthentication(true)
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
@@ -91,6 +102,12 @@ public class SecurityConfig {
                     return;
                 }
 
+                if (!properties.getUsers().isEmpty()) {
+                    properties.getUsers().forEach(this::validateConfiguredUser);
+                    validateAdminExists(properties);
+                    return;
+                }
+
                 List<String> missing = List.of(
                         propertyMissing(properties.getFtp().getHost(), "FTP_HOST"),
                         propertyMissing(properties.getFtp().getUsername(), "FTP_USERNAME"),
@@ -101,7 +118,47 @@ public class SecurityConfig {
                     throw new IllegalStateException("Missing required configuration: " + String.join(", ", missing));
                 }
             }
+
+            private void validateConfiguredUser(AppProperties.AppUser user) {
+                required(user.getUsername(), "filebridge.users[].username");
+                validatedRole(user.getRole());
+                new RemotePathPolicy(required(user.getRootPath(), "filebridge.users[].root-path"));
+                resolvePassword(user.getPasswordHash(), user.getPassword(), null);
+            }
+
+            private void validateAdminExists(AppProperties properties) {
+                boolean hasAdmin = properties.getUsers().stream()
+                        .anyMatch(user -> "admin".equals(user.getUsername()) && "ADMIN".equals(trimToNull(user.getRole())));
+                if (!hasAdmin) {
+                    throw new AccessDeniedException("Configured users must include admin with ADMIN role.");
+                }
+            }
         };
+    }
+
+    private static String resolvePassword(String configuredHash, String configuredPassword, PasswordEncoder passwordEncoder) {
+        String hash = trimToNull(configuredHash);
+        String password = trimToNull(configuredPassword);
+
+        if (hash == null && password == null) {
+            throw new IllegalStateException("Set a password hash or password for each configured user.");
+        }
+        if (hash != null) {
+            return validateBcrypt(hash);
+        }
+        if (passwordEncoder == null) {
+            return password;
+        }
+        return passwordEncoder.encode(password);
+    }
+
+    private static FileRole validatedRole(String role) {
+        String trimmedRole = required(role, "filebridge.users[].role");
+        try {
+            return FileRole.valueOf(trimmedRole);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalStateException("Unsupported role configured: " + trimmedRole);
+        }
     }
 
     private static String required(String value, String envName) {

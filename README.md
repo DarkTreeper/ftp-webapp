@@ -58,6 +58,13 @@ In IntelliJ:
    Passwort: Change_ME
    ```
 
+Weitere lokale Testbenutzer:
+
+```text
+intern / Change_ME   -> nur lesen und herunterladen in /Intern
+extern / Change_ME   -> lesen, herunterladen und hochladen in /Extern
+```
+
 Alternativ im Terminal:
 
 ```bash
@@ -83,8 +90,9 @@ Kopieren:
 Diese Felder musst du anpassen:
 
    ```bash
-   APP_USERNAME=webadmin
-   APP_PASSWORD=ein-sehr-langes-zufaelliges-passwort
+   APP_ADMIN_PASSWORD=ein-sehr-langes-zufaelliges-passwort
+   APP_INTERN_PASSWORD=ein-zweites-langes-passwort
+   APP_EXTERN_PASSWORD=ein-drittes-langes-passwort
    FTP_HOST=172.16.120.30
    FTP_PORT=21
    FTP_USERNAME=dein-ftp-user
@@ -96,11 +104,14 @@ Diese Felder musst du anpassen:
 
 Erklaerung der wichtigsten Felder:
 
-- `APP_USERNAME`
-  Der Login-Name fuer die Weboberflaeche
+- `APP_ADMIN_PASSWORD`
+  Passwort fuer den Benutzer `admin`, der weiterhin Vollzugriff hat
 
-- `APP_PASSWORD`
-  Das Passwort fuer die Weboberflaeche
+- `APP_INTERN_PASSWORD`
+  Passwort fuer den Benutzer `intern`, der nur im Pfad `/Intern` lesen und herunterladen darf
+
+- `APP_EXTERN_PASSWORD`
+  Passwort fuer den Benutzer `extern`, der nur im Pfad `/Extern` lesen, herunterladen und hochladen darf
 
 - `FTP_HOST`
   Immer die virtuelle FTP-IP, also bei dir `172.16.120.30`
@@ -193,8 +204,9 @@ https://DEIN-HOSTNAME
 Einloggen mit:
 
 ```text
-APP_USERNAME
-APP_PASSWORD
+admin / APP_ADMIN_PASSWORD
+intern / APP_INTERN_PASSWORD
+extern / APP_EXTERN_PASSWORD
 ```
 
 ## Nginx vor der App
@@ -223,8 +235,9 @@ Wichtige Punkte:
 Wenn du erstmal mit deinen bekannten Adressen startest, dann ist das eine gute Basis:
 
 ```bash
-APP_USERNAME=webadmin
-APP_PASSWORD=BitteEinSehrLangesNeuesPasswortSetzen
+APP_ADMIN_PASSWORD=BitteEinSehrLangesNeuesPasswortSetzen
+APP_INTERN_PASSWORD=BitteEinZweitesLangesPasswortSetzen
+APP_EXTERN_PASSWORD=BitteEinDrittesLangesPasswortSetzen
 FTP_HOST=172.16.120.30
 FTP_PORT=21
 FTP_USERNAME=DEIN_FTP_BENUTZER
@@ -242,7 +255,7 @@ SERVER_PORT=8080
 ## Was du spaeter selbst anpassen kannst
 
 - Web-Login:
-  `APP_USERNAME`, `APP_PASSWORD`
+  `APP_ADMIN_PASSWORD`, `APP_INTERN_PASSWORD`, `APP_EXTERN_PASSWORD`
 
 - FTP-Ziel:
   `FTP_HOST`, `FTP_PORT`, `FTP_USERNAME`, `FTP_PASSWORD`

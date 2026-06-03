@@ -11,6 +11,7 @@
     <div>
         <p class="eyebrow">Secure FileBridge</p>
         <h1>Dateien in den gemeinsamen Speicher uebertragen</h1>
+        <p class="muted session-meta"><span th:text="${currentUser}"></span> <span th:if="${currentRole}">| Rolle: <span th:text="${currentRole}"></span></span></p>
     </div>
     <form th:action="@{/logout}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -38,7 +39,7 @@
                     <p class="path" th:text="${remote.path}"></p>
                 </div>
 
-                <form th:action="@{/transfer/upload}" method="post" enctype="multipart/form-data" class="stack">
+                <form th:if="${canUpload}" th:action="@{/transfer/upload}" method="post" enctype="multipart/form-data" class="stack">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <input type="hidden" name="remotePath" th:value="${remote.path}">
                     <label>
@@ -47,6 +48,11 @@
                     </label>
                     <button type="submit" class="primary">In den gemeinsamen Speicher hochladen</button>
                 </form>
+
+                <div th:unless="${canUpload}" class="info-box">
+                    <h3>Upload nicht erlaubt</h3>
+                    <p class="muted">Dein Benutzer darf in diesem Bereich nur lesen und herunterladen.</p>
+                </div>
 
                 <div class="hint-list">
                     <p>Der Browser kann den Rechner nicht frei durchsuchen wie Desktop-FileZilla.</p>
@@ -61,7 +67,7 @@
                     <h2 id="remote-title">Gemeinsamer Speicher</h2>
                     <p class="path"><span th:text="${remote.path}"></span></p>
                 </div>
-                <a class="text-link" th:if="${remote.parentPath != null}" th:href="@{/(remotePath=${remote.parentPath})}">Eine Ebene hoch</a>
+                <a class="text-link" th:if="${remoteParentPath != null}" th:href="@{/(remotePath=${remoteParentPath})}">Eine Ebene hoch</a>
             </div>
 
             <div class="pane-body remote-summary">
@@ -94,7 +100,13 @@
                         <td th:text="${entry.directory ? '-' : entry.size + ' B'}"></td>
                         <td th:text="${entry.modified != null ? #temporals.format(entry.modified, 'dd.MM.yyyy HH:mm') : '-'}"></td>
                         <td class="actions">
-                            <a th:if="${!entry.directory}" class="primary button-link" th:href="@{/transfer/download(remoteFile=${entry.path})}">Herunterladen</a>
+                            <a th:if="${!entry.directory and canDownload}" class="primary button-link" th:href="@{/transfer/download(remoteFile=${entry.path})}">Herunterladen</a>
+                            <form th:if="${!entry.directory and canDelete}" th:action="@{/transfer/delete}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <input type="hidden" name="remotePath" th:value="${entry.path}">
+                                <input type="hidden" name="directory" value="false">
+                                <button type="submit" class="danger">Loeschen</button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>

@@ -1,6 +1,6 @@
 # Scripts - Entwickler-Hilfsmittel
 
-## 🔐 git-security-check.sh
+##  git-security-check.sh
 
 Pre-commit Hook zur Vermeidung von Sicherheitsproblemen.
 
@@ -15,7 +15,7 @@ chmod +x .git/hooks/pre-commit
 - ❌ `.env` Dateien (Credentials)
 - ❌ Hardcodierte Passwords in Java
 - ❌ Leak-Verdächtige Strings
-- ❌ Build-Artefakte (`target/`,`.class`)
+- ❌ Build-Artefakte (`target/`, `.class`)
 - ⚠️ Lokale Testdaten
 - ⚠️ IDE-Konfigurationsdateien
 
@@ -26,7 +26,7 @@ git commit --no-verify
 
 ---
 
-## 🧪 Lokales Testing
+##  Lokales Testing
 
 ### Schneller Test aller Unit-Tests
 ```bash
@@ -48,7 +48,7 @@ docker compose down
 
 ---
 
-## 🚀 Lokales Development Setup
+##  Lokales Development Setup
 
 ### 1. .env.local erstellen (nur lokal, nicht committen!)
 ```bash
@@ -64,11 +64,11 @@ SPRING_PROFILES_ACTIVE=local mvn spring-boot:run
 ```
 
 Browser: `http://localhost:8080`  
-Login: `admin` / `Change_ME`
+Login: `admin` / `admin12345`
 
 ---
 
-## 📦 Build & Deployment
+##  Build & Deployment
 
 ### JAR bauen
 ```bash
@@ -91,7 +91,7 @@ docker compose logs -f
 
 ---
 
-## 🔍 Debugging Tips
+##  Debugging Tips
 
 ### Logs ansehen (lokal)
 ```bash
@@ -114,7 +114,7 @@ FILEBRIDGE_DEMO_MODE=true mvn spring-boot:run
 
 ---
 
-## 🛠️ Häufige Entwickler-Probleme
+## ️ Häufige Entwickler-Probleme
 
 ### Problem: `FTP_USERNAME` / `FTP_PASSWORD` nicht gesetzt
 **Lösung:** Nutze `local` profile oder setze `.env.local`
@@ -131,5 +131,4 @@ chmod +x .git/hooks/pre-commit
 export FILEBRIDGE_DEMO_MODE=true
 mvn test
 ```
-
 

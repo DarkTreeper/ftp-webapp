@@ -162,16 +162,15 @@ Dieses Dokument hilft beim Überprüfen der Sicherheit vor Releases und Merges.
 
 ## ⚠️ Kritische Fehlerpfade (NIEMALS)
 
-- 🚫 Niemals `APP_PASSWORD` in plain-text ins Repo
-- 🚫 Niemals `FTP_PASSWORD` ohne Verschlüsselung versendet  
-- 🚫 Niemals `.env` committen (auch nicht mit `--force`)
-- 🚫 Niemals Zertifikat-Private-Keys ins Repo
-- 🚫 Niemals Bearer-Tokens oder API-Keys hardcoden
-- 🚫 Niemals als Root im Container starten
+-  Niemals `APP_PASSWORD` in plain-text ins Repo
+-  Niemals `FTP_PASSWORD` ohne Verschlüsselung versendet  
+-  Niemals `.env` committen (auch nicht mit `--force`)
+-  Niemals Zertifikat-Private-Keys ins Repo
+-  Niemals Bearer-Tokens oder API-Keys hardcoden
+-  Niemals als Root im Container starten
 
 Wenn ein dieser Punkte passiert ist:
 1. **Sofort danach rotieren** (neues Password, neuer Token, etc.)
 2. **Git-History cleanen** (falls öffentliches Repo): `git filter-branch` oder `bfg-repo-cleaner`
 3. **Team informieren**
-
 
